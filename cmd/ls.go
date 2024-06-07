@@ -64,8 +64,10 @@ var lsCmd = &cobra.Command{
 		}
 
 		boldYellow := color.New(color.FgYellow).Add(color.Bold)
-		for i, l := range ls {
-			fmt.Printf("%d: %s (", i+1, l.Name)
+		boldBlue := color.New(color.FgBlue).Add(color.Bold)
+		for _, l := range ls {
+			boldBlue.Printf("- ")
+			fmt.Printf("%s (", l.Name)
 			boldYellow.Printf("%s", l.Key)
 			fmt.Println(")")
 		}
