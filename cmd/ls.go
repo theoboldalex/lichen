@@ -27,6 +27,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -63,7 +64,10 @@ var lsCmd = &cobra.Command{
 		}
 
 		for i, l := range ls {
-			fmt.Printf("%d: %s\n", i+1, l.Name)
+			boldYellow := color.New(color.FgYellow).Add(color.Bold)
+			fmt.Printf("%d: %s (", i+1, l.Name)
+			boldYellow.Printf("%s", l.Key)
+			fmt.Println(")")
 		}
 	},
 }
