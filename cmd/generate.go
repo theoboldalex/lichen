@@ -22,20 +22,45 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/spf13/cobra"
+	utils "github.com/theoboldalex/lichen/pkg"
 )
+
+type LicenseBody struct {
+	Content string `json:"body"`
+	Pretty  string `json:"html_url"`
+}
 
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate a license",
 	Long:  `Generate a license from the available open source licenses`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) > 0 {
-			fmt.Printf("generate called with: %s\n", args[0])
+		resp, err := http.Get(fmt.Sprintf("%s/%v", utils.LICENSES_URL, args[0]))
+		if err != nil {
+			log.Fatal(err)
 		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			log.Fatal(fmt.Sprintf("There was a problem with the request. Expected HTTP 200 but got HTTP %d", resp.StatusCode))
+		}
+
+		var l LicenseBody
+		err = json.NewDecoder(resp.Body).Decode(&l)
+		if err != nil {
+			log.Fatal("Unable to decode JSON into struct")
+		}
+
+		// TODO: Write this to file
+		fmt.Printf("%v", l.Content)
 	},
 }
 

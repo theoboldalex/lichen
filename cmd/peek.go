@@ -26,27 +26,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
+	"runtime"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	utils "github.com/theoboldalex/lichen/pkg"
 )
 
-type License struct {
-	Key  string `json:"key"`
-	Name string `json:"name"`
-	Id   string `json:"spdx_id"`
-	Url  string `json:"url"`
-	Node string `json:"node_id"`
-}
-
-// lsCmd represents the ls command
-var lsCmd = &cobra.Command{
-	Use:   "ls",
-	Short: "List licenses",
-	Long:  `Show a list of all availabale open source liceses that can be generated.`,
+// peekCmd represents the peek command
+var peekCmd = &cobra.Command{
+	Use:   "peek",
+	Short: "See a license",
+	Long:  `Peek a license's content either dorectly in the temrinal or visist it int the browser`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := http.Get(utils.LICENSES_URL)
+		resp, err := http.Get(fmt.Sprintf("%s/%v", utils.LICENSES_URL, args[0]))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -56,33 +50,40 @@ var lsCmd = &cobra.Command{
 			log.Fatal(fmt.Sprintf("There was a problem with the request. Expected HTTP 200 but got HTTP %d", resp.StatusCode))
 		}
 
-		var ls []License
-		err = json.NewDecoder(resp.Body).Decode(&ls)
+		var l LicenseBody
+		err = json.NewDecoder(resp.Body).Decode(&l)
 		if err != nil {
 			log.Fatal("Unable to decode JSON into struct")
 		}
 
-		boldYellow := color.New(color.FgYellow).Add(color.Bold)
-		boldBlue := color.New(color.FgBlue).Add(color.Bold)
-		for _, l := range ls {
-			boldBlue.Printf("- ")
-			fmt.Printf("%s (", l.Name)
-			boldYellow.Printf("%s", l.Key)
-			fmt.Println(")")
+		prettyFlag, err := cmd.Flags().GetBool("pretty")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var c *exec.Cmd
+
+		if prettyFlag {
+			switch runtime.GOOS {
+			case "darwin":
+				c = exec.Command("open", l.Pretty)
+			case "linux":
+				c = exec.Command("xdg-open", l.Pretty)
+			default:
+				fmt.Println("Get tae fuck")
+			}
+
+			err := c.Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			fmt.Printf("%v", l.Content)
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(lsCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// lsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// lsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(peekCmd)
+	peekCmd.Flags().BoolP("pretty", "p", false, "If passed, open the browser version of the license at choosealicense.com")
 }
