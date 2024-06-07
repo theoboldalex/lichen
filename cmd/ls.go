@@ -63,8 +63,8 @@ var lsCmd = &cobra.Command{
 			log.Fatal("Unable to decode JSON into struct")
 		}
 
+		boldYellow := color.New(color.FgYellow).Add(color.Bold)
 		for i, l := range ls {
-			boldYellow := color.New(color.FgYellow).Add(color.Bold)
 			fmt.Printf("%d: %s (", i+1, l.Name)
 			boldYellow.Printf("%s", l.Key)
 			fmt.Println(")")
