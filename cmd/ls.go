@@ -35,9 +35,7 @@ import (
 type License struct {
 	Key  string `json:"key"`
 	Name string `json:"name"`
-	Id   string `json:"spdx_id"`
 	Url  string `json:"url"`
-	Node string `json:"node_id"`
 }
 
 // lsCmd represents the ls command
