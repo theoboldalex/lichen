@@ -43,7 +43,7 @@ type License struct {
 // lsCmd represents the ls command
 var lsCmd = &cobra.Command{
 	Use:   "ls",
-	Short: "List licenses",
+	Short: "List available licenses",
 	Long:  `Show a list of all availabale open source liceses that can be generated.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		resp, err := http.Get(utils.LICENSES_URL)

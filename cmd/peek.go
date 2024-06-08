@@ -36,7 +36,7 @@ import (
 // peekCmd represents the peek command
 var peekCmd = &cobra.Command{
 	Use:   "peek",
-	Short: "See a license",
+	Short: "See a license's content",
 	Long:  `Peek a license's content either dorectly in the temrinal or visist it int the browser`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

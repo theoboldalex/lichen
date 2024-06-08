@@ -35,7 +35,13 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "lichen",
 	Short: "A license generation CLI",
-	Long:  `Lichen is a CLI that can generate open source license files for your project from the command line.`,
+	Long: `__         __     ______     __  __     ______     __   __    
+/\ \       /\ \   /\  ___\   /\ \_\ \   /\  ___\   /\ "-.\ \   
+\ \ \____  \ \ \  \ \ \____  \ \  __ \  \ \  __\   \ \ \-.  \  
+ \ \_____\  \ \_\  \ \_____\  \ \_\ \_\  \ \_____\  \ \_\\"\_\ 
+  \/_____/   \/_/   \/_____/   \/_/\/_/   \/_____/   \/_/ \/_/ 
+                                                               
+Lichen is a CLI that can generate open source license files for your project from the command line.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
