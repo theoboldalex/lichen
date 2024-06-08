@@ -33,7 +33,6 @@ import (
 	utils "github.com/theoboldalex/lichen/pkg"
 )
 
-// peekCmd represents the peek command
 var peekCmd = &cobra.Command{
 	Use:   "peek",
 	Short: "See a license's content",
