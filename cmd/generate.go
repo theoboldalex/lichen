@@ -59,7 +59,7 @@ var generateCmd = &cobra.Command{
 		}
 
 		// TODO: Write this to file
-		fmt.Printf("%v", l.Content)
+		fmt.Printf("%s", l.Content)
 	},
 }
 

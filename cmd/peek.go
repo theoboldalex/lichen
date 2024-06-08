@@ -77,7 +77,7 @@ var peekCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 		} else {
-			fmt.Printf("%v", l.Content)
+			fmt.Printf("%s", l.Content)
 		}
 	},
 }
