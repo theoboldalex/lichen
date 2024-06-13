@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	utils "github.com/theoboldalex/lichen/pkg"
@@ -39,8 +40,11 @@ type LicenseBody struct {
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate a license",
-	Long:  `Generate a license from the available open source licenses`,
-	Args:  cobra.ExactArgs(1),
+	Long: `Generate a license from the available open source licenses.
+
+Usage: lichen generate <short_name_of_license>
+Example: lichen generate apache-2.0`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		resp, err := http.Get(fmt.Sprintf("%s/%v", utils.LICENSES_URL, args[0]))
 		if err != nil {
@@ -58,8 +62,10 @@ var generateCmd = &cobra.Command{
 			log.Fatal("Unable to decode JSON into struct")
 		}
 
-		// TODO: Write this to file
-		fmt.Printf("%s", l.Content)
+		err = os.WriteFile("LICENSE", []byte(l.Content), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
